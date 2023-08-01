@@ -36,6 +36,10 @@ const AccountScreen = ({ navigation }) => {
                     onPress={() => navigation.navigate('Home')}
                     title="Log out"
                 />
+                <PrimaryButton
+                    onPress={() => navigation.navigate('Home')}
+                    title="Log in"
+                />
             </View>
         </SafeAreaView>
     );
