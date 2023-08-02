@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Dimensions,
   Image,
@@ -14,16 +14,28 @@ import {
   TouchableHighlight,
   TouchableOpacity,
 } from 'react-native';
- import Icon from 'react-native-vector-icons/Ionicons';
+import Icon from 'react-native-vector-icons/Ionicons';
 import COLORS from '../../consts/colors';
 import categories from '../../consts/categories';
 import foods from '../../consts/foods';
-const {width} = Dimensions.get('screen');
+const { width } = Dimensions.get('screen');
 const cardWidth = width / 2 - 20;
 
-const HomeScreen = ({navigation}) => {
+const HomeScreen = ({ navigation }) => {
   const [selectedCategoryIndex, setSelectedCategoryIndex] = React.useState(0);
-
+  const [listCate, setCate] = useState([]);
+  const callApi = async () => {
+    try {
+      const res = await fetch('http://172.16.1.36:2000/api/category')
+      const data = await res.json();
+      console.log(data)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  useEffect(() =>{
+    callApi();
+  })
   const ListCategories = () => {
     return (
       <ScrollView
@@ -46,7 +58,7 @@ const HomeScreen = ({navigation}) => {
               <View style={style.categoryBtnImgCon}>
                 <Image
                   source={category.image}
-                  style={{height: 35, width: 35, resizeMode: 'cover'}}
+                  style={{ height: 35, width: 35, resizeMode: 'cover' }}
                 />
               </View>
               <Text
@@ -67,19 +79,19 @@ const HomeScreen = ({navigation}) => {
       </ScrollView>
     );
   };
-  const Card = ({food}) => {
+  const Card = ({ food }) => {
     return (
       <TouchableHighlight
         underlayColor={COLORS.white}
         activeOpacity={0.9}
         onPress={() => navigation.navigate('DetailsScreen', food)}>
         <View style={style.card}>
-          <View style={{alignItems: 'center', top: -40}}>
-            <Image source={food.image} style={{height: 120, width: 120}} />
+          <View style={{ alignItems: 'center', top: -40 }}>
+            <Image source={food.image} style={{ height: 120, width: 120 }} />
           </View>
-          <View style={{marginHorizontal: 20}}>
-            <Text style={{fontSize: 18, fontWeight: 'bold'}}>{food.name}</Text>
-            <Text style={{fontSize: 14, color: COLORS.grey, marginTop: 2}}>
+          <View style={{ marginHorizontal: 20 }}>
+            <Text style={{ fontSize: 18, fontWeight: 'bold' }}>{food.name}</Text>
+            <Text style={{ fontSize: 14, color: COLORS.grey, marginTop: 2 }}>
               {food.ingredients}
             </Text>
           </View>
@@ -90,11 +102,11 @@ const HomeScreen = ({navigation}) => {
               flexDirection: 'row',
               justifyContent: 'space-between',
             }}>
-            <Text style={{fontSize: 18, fontWeight: 'bold'}}>
+            <Text style={{ fontSize: 18, fontWeight: 'bold' }}>
               ${food.price}
             </Text>
             <View style={style.addToCartBtn}>
-              {<Icon name="add-outline" size={20} color={COLORS.white} /> }
+              {<Icon name="add-outline" size={20} color={COLORS.white} />}
             </View>
           </View>
         </View>
@@ -102,22 +114,22 @@ const HomeScreen = ({navigation}) => {
     );
   };
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: COLORS.white}}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white }}>
       <View style={style.header}>
         <View>
-          <View style={{flexDirection: 'row'}}>
-            <Text style={{fontSize: 28}}>Hello,</Text>
-            <Text style={{fontSize: 28, fontWeight: 'bold', marginLeft: 10}}>
+          <View style={{ flexDirection: 'row' }}>
+            <Text style={{ fontSize: 28 }}>Hello,</Text>
+            <Text style={{ fontSize: 28, fontWeight: 'bold', marginLeft: 10 }}>
               Ariz
             </Text>
           </View>
-          <Text style={{marginTop: 5, fontSize: 22, color: COLORS.grey}}>
+          <Text style={{ marginTop: 5, fontSize: 22, color: COLORS.grey }}>
             What do you want today
           </Text>
         </View>
         <Image
           source={require('../../assets/person.png')}
-          style={{height: 50, width: 50, borderRadius: 25}}
+          style={{ height: 50, width: 50, borderRadius: 25 }}
         />
       </View>
       <View
@@ -127,14 +139,14 @@ const HomeScreen = ({navigation}) => {
           paddingHorizontal: 20,
         }}>
         <View style={style.inputContainer}>
-          {<Icon name="search-outline" size={28} /> }
+          {<Icon name="search-outline" size={28} />}
           <TextInput
-            style={{flex: 1, fontSize: 18}}
+            style={{ flex: 1, fontSize: 18 }}
             placeholder="Search for food"
           />
         </View>
         <View style={style.sortBtn}>
-          { <Icon name="search-outline" size={28} color={COLORS.white} /> }
+          {<Icon name="search-outline" size={28} color={COLORS.white} />}
         </View>
       </View>
       <View>
@@ -144,7 +156,7 @@ const HomeScreen = ({navigation}) => {
         showsVerticalScrollIndicator={false}
         numColumns={2}
         data={foods}
-        renderItem={({item}) => <Card food={item} />}
+        renderItem={({ item }) => <Card food={item} />}
       />
     </SafeAreaView>
   );
