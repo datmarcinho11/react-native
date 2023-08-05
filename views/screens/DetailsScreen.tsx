@@ -20,7 +20,13 @@ const DetailsScreen = ({navigation, route}) => {
             alignItems: 'center',
             height: 280,
           }}>
-          <Image source={item.image} style={{height: 220, width: 220}} />
+          {/* <Image source={item.image} style={{height: 220, width: 220}} /> */}
+          <Image
+             style={{ height: 250, width:'80%' ,borderRadius: 5 }}
+              source={{
+                uri: item.image
+              }}
+            />
         </View>
         <View style={style.details}>
           <View
@@ -38,11 +44,7 @@ const DetailsScreen = ({navigation, route}) => {
             </View>
           </View>
           <Text style={style.detailsText}>
-            Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry. Lorem Ipsum has been the industry's standard dummy text
-            ever since the 1500s, when an unknown printer took a galley of type
-            and scrambled it to make a type specimen book. It has survived not
-            only five centuries.
+            {item.description}
           </Text>
           <View style={{marginTop: 40, marginBottom: 40}}>
             <SecondaryButton title="Add To Cart" />

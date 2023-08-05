@@ -6,19 +6,19 @@ import { PrimaryButton } from '../components/Button';
 import firestore from '@react-native-firebase/firestore';
 
 const AccountScreen = ({ navigation }) => {
-    useEffect(() => {
-        firestore()
-            .collection('user')
-            .get()
-            .then(querySnapshot => {
-                console.log('Total users: ', querySnapshot.size);
+    // useEffect(() => {
+    //     firestore()
+    //         .collection('user')
+    //         .get()
+    //         .then(querySnapshot => {
+    //             console.log('Total users: ', querySnapshot.size);
 
-                querySnapshot.forEach(documentSnapshot => {
-                    console.log('User ID: ', documentSnapshot.id, documentSnapshot.data());
-                });
-            });
+    //             querySnapshot.forEach(documentSnapshot => {
+    //                 console.log('User ID: ', documentSnapshot.id, documentSnapshot.data());
+    //             });
+    //         });
 
-    },);
+    // },);
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white }}>
 

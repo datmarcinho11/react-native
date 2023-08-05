@@ -23,26 +23,41 @@ const cardWidth = width / 2 - 20;
 
 const HomeScreen = ({ navigation }) => {
   const [selectedCategoryIndex, setSelectedCategoryIndex] = React.useState(0);
-  const [listCate, setCate] = useState([]);
-  const callApi = async () => {
+  const [food, setFood] = useState([]);
+  const getFoods = async () => {
     try {
-      const res = await fetch('http://172.16.1.36:2000/api/category')
+      const res = await fetch('http://192.168.1.14:2000/api/product')
       const data = await res.json();
-      console.log(data)
+      console.log(data.product);
+      setFood(data.product)
+      console.log(food)
+    } catch (error) {
+      console.log(error)
+    }
+  };
+  const [categories, setCategories] = useState([]);
+  const getCategories = async () => {
+    try {
+      const res = await fetch('http://192.168.1.14:2000/api/category')
+      const data = await res.json();
+      console.log(data.data);
+      setCategories(data.data)
+      console.log(categories)
     } catch (error) {
       console.log(error)
     }
   }
-  useEffect(() =>{
-    callApi();
-  })
+  useEffect(() => {
+    getFoods();
+    getCategories();
+  }, [])
   const ListCategories = () => {
     return (
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={style.categoriesListContainer}>
-        {categories.map((category, index) => (
+        {categories.map((category: any, index) => (
           <TouchableOpacity
             key={index}
             activeOpacity={0.8}
@@ -57,7 +72,9 @@ const HomeScreen = ({ navigation }) => {
               }}>
               <View style={style.categoryBtnImgCon}>
                 <Image
-                  source={category.image}
+                  source={{
+                    uri: category.image
+                  }}
                   style={{ height: 35, width: 35, resizeMode: 'cover' }}
                 />
               </View>
@@ -82,18 +99,24 @@ const HomeScreen = ({ navigation }) => {
   const Card = ({ food }) => {
     return (
       <TouchableHighlight
+
         underlayColor={COLORS.white}
         activeOpacity={0.9}
         onPress={() => navigation.navigate('DetailsScreen', food)}>
         <View style={style.card}>
           <View style={{ alignItems: 'center', top: -40 }}>
-            <Image source={food.image} style={{ height: 120, width: 120 }} />
+            <Image
+              style={{ height: 120, width: '100%', borderRadius: 10 }}
+              source={{
+                uri: food.image
+              }}
+            />
           </View>
           <View style={{ marginHorizontal: 20 }}>
             <Text style={{ fontSize: 18, fontWeight: 'bold' }}>{food.name}</Text>
-            <Text style={{ fontSize: 14, color: COLORS.grey, marginTop: 2 }}>
-              {food.ingredients}
-            </Text>
+            {/* <Text style={{ fontSize: 14, color: COLORS.grey, marginTop: 2 }}>
+              {food.description}
+            </Text> */}
           </View>
           <View
             style={{
@@ -103,13 +126,14 @@ const HomeScreen = ({ navigation }) => {
               justifyContent: 'space-between',
             }}>
             <Text style={{ fontSize: 18, fontWeight: 'bold' }}>
-              ${food.price}
+              {food.price} VND
             </Text>
             <View style={style.addToCartBtn}>
               {<Icon name="add-outline" size={20} color={COLORS.white} />}
             </View>
           </View>
         </View>
+
       </TouchableHighlight>
     );
   };
@@ -155,7 +179,7 @@ const HomeScreen = ({ navigation }) => {
       <FlatList
         showsVerticalScrollIndicator={false}
         numColumns={2}
-        data={foods}
+        data={food}
         renderItem={({ item }) => <Card food={item} />}
       />
     </SafeAreaView>
