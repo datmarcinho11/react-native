@@ -2,9 +2,10 @@ import React, { useEffect } from "react";
 import { TouchableOpacity } from "react-native";
 import { TextInput } from "react-native";
 import { SafeAreaView, View, Text } from "react-native";
+import Icon from 'react-native-vector-icons/Ionicons';
 
 const LoginScreen = ({ navigation }) => {
-   
+
     return (
 
         <>
@@ -13,6 +14,8 @@ const LoginScreen = ({ navigation }) => {
                     padding: 20,
 
                 }}>
+                    {<Icon name="arrow-back-outline" size={28} onPress={navigation.goBack} />}
+
                     <View style={{ alignItems: 'center' }}>
                         <Text style={{ fontSize: 30, color: '#F9813A', marginVertical: 30, fontWeight: '900' }}>
                             Login here

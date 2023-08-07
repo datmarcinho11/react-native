@@ -33,12 +33,12 @@ const AccountScreen = ({ navigation }) => {
               
 
                 <PrimaryButton
-                    onPress={() => navigation.navigate('Home')}
-                    title="Log out"
+                    onPress={() => navigation.navigate('Register')}
+                    title="Sign Up"
                 />
                 <PrimaryButton
-                    onPress={() => navigation.navigate('Home')}
-                    title="Log in"
+                    onPress={() => navigation.navigate('Login')}
+                    title="Sign in"
                 />
             </View>
         </SafeAreaView>

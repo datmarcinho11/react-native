@@ -26,11 +26,9 @@ const HomeScreen = ({ navigation }) => {
   const [food, setFood] = useState([]);
   const getFoods = async () => {
     try {
-      const res = await fetch('http://192.168.1.14:2000/api/product')
+      const res = await fetch('http://172.16.1.15:2000/api/product')
       const data = await res.json();
-      console.log(data.product);
       setFood(data.product)
-      console.log(food)
     } catch (error) {
       console.log(error)
     }
@@ -38,11 +36,9 @@ const HomeScreen = ({ navigation }) => {
   const [categories, setCategories] = useState([]);
   const getCategories = async () => {
     try {
-      const res = await fetch('http://192.168.1.14:2000/api/category')
+      const res = await fetch('http://172.16.1.15:2000/api/category')
       const data = await res.json();
-      console.log(data.data);
       setCategories(data.data)
-      console.log(categories)
     } catch (error) {
       console.log(error)
     }
