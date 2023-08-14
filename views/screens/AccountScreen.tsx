@@ -3,34 +3,27 @@ import { Text, StyleSheet, View, Image, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import COLORS from '../../consts/colors';
 import { PrimaryButton } from '../components/Button';
-import firestore from '@react-native-firebase/firestore';
+import { useUser } from '../context/UserProvider';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const AccountScreen = ({ navigation }) => {
-    // useEffect(() => {
-    //     firestore()
-    //         .collection('user')
-    //         .get()
-    //         .then(querySnapshot => {
-    //             console.log('Total users: ', querySnapshot.size);
+    const { user, setUser, getUser, delUser }: any = useUser();
 
-    //             querySnapshot.forEach(documentSnapshot => {
-    //                 console.log('User ID: ', documentSnapshot.id, documentSnapshot.data());
-    //             });
-    //         });
-
-    // },);
+    const logOut = async () => {
+        delUser();
+    }
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white }}>
 
             <View >
                 <View>
-                   
-                        <Text style={{ fontSize: 32, fontWeight: 'bold',  }}>
-                            Hihihi
-                        </Text>
+
+                    <Text style={{ fontSize: 32, fontWeight: 'bold', }}>
+                        account
+                    </Text>
 
                 </View>
-              
+
 
                 <PrimaryButton
                     onPress={() => navigation.navigate('Register')}
@@ -39,6 +32,11 @@ const AccountScreen = ({ navigation }) => {
                 <PrimaryButton
                     onPress={() => navigation.navigate('Login')}
                     title="Sign in"
+                />
+                <PrimaryButton
+                    onPress={() => logOut()}
+                    title="Log out"
+
                 />
             </View>
         </SafeAreaView>

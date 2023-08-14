@@ -4,9 +4,12 @@ import { TextInput } from "react-native";
 import { SafeAreaView, View, Text, StyleSheet } from "react-native";
 import axios from 'axios';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { useUser } from "../context/UserProvider";
 
 
 const RegisterSceen = ({ navigation }) => {
+    // const {user,setUser,getUser }:any = useUser();
+
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassWord] = useState('');
@@ -34,7 +37,7 @@ const RegisterSceen = ({ navigation }) => {
         formData.address === '' ? checkAddress('Address cannot be blank') : checkAddress('')
         formData.email === '' ? checkEmail('Email cannot be blank') : checkEmail('')
         if (formData.name !== '' && formData.address !== '' && formData.email !== '' && formData.password !== '' && regexEmail.test(formData.email)) {
-            axios.post('http://192.168.1.14:2000/api/register', formData).
+            axios.post('http://172.16.1.9:2000/api/register', formData).
                 then((respone) => {
                     if (respone.data.statusCode === 200) {
                         navigation.navigate('Login')
@@ -73,7 +76,7 @@ const RegisterSceen = ({ navigation }) => {
                         <TextInput placeholder="Name" style={{ fontSize: 14, padding: 20, borderRadius: 10, marginVertical: 10, borderWidth: 0.5 }} onChangeText={(value) => setName(value)} />
                         <Text style={{ color: 'red', fontStyle: 'italic' }}>{errName}</Text>
                         <TextInput placeholder="Email" style={{ fontSize: 14, padding: 20, borderRadius: 10, marginVertical: 10, borderWidth: 0.5 }} onChangeText={(value) => setEmail(value)} />
-                        {<Text style={{ color: 'red', fontStyle: 'italic' }}>{errEmail}</Text>}
+                        <Text style={{ color: 'red', fontStyle: 'italic' }}>{errEmail}</Text>
                         <Text style={{ color: 'red', fontStyle: 'italic' }}>{!errEmailRegex ? 'Invalid email eg: admin@gmail.com' : ''}</Text>
 
                         <TextInput placeholder="Password" style={{ fontSize: 14, padding: 20, borderRadius: 10, marginVertical: 10, borderWidth: 0.5 }} secureTextEntry={true} onChangeText={(value) => setPassWord(value)} />

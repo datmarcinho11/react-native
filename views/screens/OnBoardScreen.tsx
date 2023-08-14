@@ -3,8 +3,10 @@ import {Text, StyleSheet, View, Image} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import COLORS from '../../consts/colors';
 import {PrimaryButton} from '../components/Button';
+import { useUser } from '../context/UserProvider';
 
 const OnBoardScreen = ({navigation}) => {
+
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: COLORS.white}}>
       <View style={{height: 400}}>

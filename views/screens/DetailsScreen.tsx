@@ -3,8 +3,11 @@ import {SafeAreaView, StyleSheet, View, Text, Image,ScrollView} from 'react-nati
 import Icon from 'react-native-vector-icons/Ionicons';
 import COLORS from '../../consts/colors';
 import {SecondaryButton} from '../components/Button';
+import { useUser } from '../context/UserProvider';
 
 const DetailsScreen = ({navigation, route}) => {
+  // const {user,setUser,getUser }:any = useUser();
+
   const item = route.params;
 
   return (

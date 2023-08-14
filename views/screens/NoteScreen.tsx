@@ -8,7 +8,6 @@ const NoteScreen = ({navigation}) => {
     return (
         <>
             <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white }}>
-
                 <Title title="my note" icon="menu" />
 
                 <View style={{ marginTop: 50, backgroundColor: 'pink', padding: 20, borderRadius: 15, marginHorizontal: 20 }}>
