@@ -27,48 +27,36 @@ const { width } = Dimensions.get('screen');
 const cardWidth = width / 2 - 20;
 
 const HomeScreen = ({ navigation }) => {
+
+
+  const addToCartBtn = (item) => {
+    // Update cart item quantity if already in cart
+    // console.log(item)
+    if (carts.some((cartItem) => cartItem.id === item.id)) {
+      setCart((cart) =>
+        cart.map((cartItem) =>
+          // console.log(cartItem),
+          cartItem.id === item.id
+            ? {
+              ...cartItem,
+              amount: cartItem.amount + 1,
+            }
+            : cartItem
+        )
+      );
+      return;
+    }
+
+    // Add to cart
+    setCart((cart) => [
+      ...cart,
+      { ...item, amount: 1 } // <-- initial amount 1
+    ]);
+  };
+
   const { user, setUser, getUser }: any = useUser();
   const { carts, setCart, getCart }: any = useCart();
-  const addToCart = async (item: any) => {
-    let pro = {
-      proId: item.id,
-      proName: item.name,
-      proPrice: item.price,
-      proImg: item.image,
-      quantity: 1
-    }
-    let pushCart: any;
-    let check = 0;
-    
 
-    if (carts.length == 0) {
-      pushCart = [...carts, pro];
-      setCart(pushCart);
-      AsyncStorage.setItem('carts', JSON.stringify(pushCart));
-      alert('new')
-    } else {
-
-      carts.map((cart: any) => {
-
-        if (cart.proId == pro.proId) {
-          check = 1;
-          alert(check)
-          cart.quantity += 1
-          pushCart = [...carts, cart.quantity += 1];
-          setCart(pushCart);
-          AsyncStorage.setItem('carts', JSON.stringify(pushCart));
-        } else {
-          alert(check)
-          pushCart = [...carts, cart];
-          setCart(pushCart);
-          AsyncStorage.setItem('carts', JSON.stringify(pushCart));
-        }
-      })
-
-    
-
-    }
-  }
 
   const [key, setKey] = useState('');
   const search = async () => {
@@ -83,14 +71,14 @@ const HomeScreen = ({ navigation }) => {
       let res: any;
       if (id != 7) {
 
-        res = await fetch('http://172.16.1.9:2000/api/product-by-cat-id/' + id)
+        res = await fetch('http://192.168.0.114:2000/api/product-by-cat-id/' + id)
       }
       else if (key != null) {
-        res = await fetch('http://172.16.1.9:2000/api/product/?key=' + key)
+        res = await fetch('http://192.168.0.114:2000/api/product/?key=' + key)
 
       }
       else {
-        res = await fetch('http://172.16.1.9:2000/api/product')
+        res = await fetch('http://192.168.0.114:2000/api/product')
 
       }
       const data = await res.json();
@@ -102,7 +90,7 @@ const HomeScreen = ({ navigation }) => {
   const [categories, setCategories] = useState([]);
   const getCategories = async () => {
     try {
-      const res = await fetch('http://172.16.1.9:2000/api/category')
+      const res = await fetch('http://192.168.0.114:2000/api/category')
       const data = await res.json();
       setCategories(data.data)
     } catch (error) {
@@ -201,7 +189,7 @@ const HomeScreen = ({ navigation }) => {
           <TouchableHighlight
             underlayColor={COLORS.white}
             activeOpacity={0.9}
-            onPress={() => addToCart(food)}>
+            onPress={() => addToCartBtn(food)}>
             <View style={style.addToCartBtn}>
               {<Icon name="add-outline" size={20} color={COLORS.white} />}
             </View>

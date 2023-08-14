@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { SafeAreaView, StyleSheet, View, Text, Image, FlatList, TextInput } from 'react-native';
+import { SafeAreaView, StyleSheet, View, Text, Image, FlatList, TextInput, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 import COLORS from '../../consts/colors';
@@ -10,10 +10,32 @@ import { useCart } from '../context/CartProvider';
 import axios from 'axios';
 
 const CartScreen = ({ navigation }) => {
+
   const [note, setNote] = useState('');
 
   const { user, setUser, getUser }: any = useUser();
   const { carts, setCart, getCart, delCart }: any = useCart();
+  const handleRemove = (id) => {
+    setCart(carts => carts.filter(item => item.id !== id));
+  };
+
+  const price = carts.reduce((total, item) => total + item.amount * item.price, 0);
+  const handleChange = (id, d) => {
+    setCart((cart) =>
+      carts.flatMap((cartItem) =>
+        cartItem.id == id
+          ? cartItem.amount + d < 1
+            ? [cartItem] // <-- remove item if amount will be less than 1
+            : [
+              {
+                ...cartItem,
+                amount: cartItem.amount + d
+              }
+            ]
+          : [cartItem]
+      )
+    );
+  };
   const checkOut = async () => {
     let formOrders = {
       note: note,
@@ -77,7 +99,7 @@ const CartScreen = ({ navigation }) => {
     return (
       <View style={style.cartCard}>
         <Image source={{
-          uri: item.proImg
+          uri: item.image
         }} style={{ height: 80, width: 80 }} />
         <View
           style={{
@@ -86,17 +108,31 @@ const CartScreen = ({ navigation }) => {
             paddingVertical: 20,
             flex: 1,
           }}>
-          <Text style={{ fontWeight: 'bold', fontSize: 16 }}>{item.proName}</Text>
+          <Text style={{ fontWeight: 'bold', fontSize: 16 }}>{item.name}</Text>
 
-          <Text style={{ fontSize: 17, fontWeight: 'bold' }}> {item.proPrice} VND</Text>
+          <Text style={{ fontSize: 17, fontWeight: 'bold' }}> {item.price} VND</Text>
         </View>
         <View style={{ marginRight: 20, alignItems: 'center' }}>
-          <Text style={{ fontWeight: 'bold', fontSize: 18 }}>{item.quantity}</Text>
+          <Text style={{ fontWeight: 'bold', fontSize: 18 }}>{item.amount}</Text>
           <View style={style.actionBtn}>
-            {<Icon name="remove-outline" size={25} color={COLORS.white} />}
-            {<Icon name="add-outline" size={25} color={COLORS.white} />}
+            <TouchableOpacity
+              activeOpacity={0.8}
+              onPress={() => handleChange(item.id,-1)}>
+              {<Icon name="remove-outline" size={25} color={COLORS.white} />}
+            </TouchableOpacity>
+            <TouchableOpacity
+              activeOpacity={0.8}
+              onPress={() => handleChange(item.id,1)}>
+              {<Icon name="add-outline" size={25} color={COLORS.white} />}
+            </TouchableOpacity>
           </View>
+
         </View>
+        <TouchableOpacity
+          activeOpacity={0.8}
+          onPress={() => handleRemove(item.id)}>
+          {<Icon name="trash" size={28} />}
+        </TouchableOpacity>
       </View>
     );
   };
@@ -117,8 +153,8 @@ const CartScreen = ({ navigation }) => {
             // carts.map((item: any, index) => (
 
             <View>
-              <View style={{alignItems:'flex-start'}}>
-              {/* {<Icon name="trash" size={28} />} */}
+              <View style={{ alignItems: 'flex-start' }}>
+                {/* {<Icon name="trash" size={28} />} */}
 
               </View>
               <View style={{ marginHorizontal: 30 }}>
@@ -141,7 +177,7 @@ const CartScreen = ({ navigation }) => {
                 <Text style={{ fontSize: 18, fontWeight: 'bold' }}>
                   Total Price
                 </Text>
-                <Text style={{ fontSize: 18, fontWeight: 'bold' }}>VND</Text>
+                <Text style={{ fontSize: 18, fontWeight: 'bold' }}>{price} VND</Text>
               </View>
 
               <View style={{ marginHorizontal: 30 }}>
@@ -191,13 +227,13 @@ const style = StyleSheet.create({
     alignItems: 'center',
   },
   actionBtn: {
-    width: 80,
+    width: 100,
     height: 30,
     backgroundColor: COLORS.primary,
     borderRadius: 30,
     paddingHorizontal: 5,
     flexDirection: 'row',
-    justifyContent: 'center',
+    justifyContent: 'space-around',
     alignContent: 'center',
   },
 });
