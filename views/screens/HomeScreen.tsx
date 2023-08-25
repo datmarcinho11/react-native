@@ -24,25 +24,48 @@ import { useUser } from '../context/UserProvider';
 import { PrimaryButton } from '../components/Button';
 import { useCart } from '../context/CartProvider';
 import { check } from 'prettier';
+import axios from 'axios';
 const { width } = Dimensions.get('screen');
 const cardWidth = width / 2 - 20;
 
 const HomeScreen = ({ navigation }) => {
+  const [favourites, setFavourites] = useState([]);
 
-  const format = (x: any) => {
-    x = x.toLocaleString('vi', { style: 'currency', currency: 'VND' });
-    console.log(x)
+  const getListFavourites = async () => {
+    try {
+      const res = await fetch('http://10.192.12.51:2000/api/favourites/' + user.id)
+      const data = await res.json();
+      setFavourites(data.product)
+      console.log(data.product)
+    } catch (error) {
+      console.log(error)
+    }
   }
-  const addToCartBtn = (item) => {
+  const addToFav = (item: { id: any }) => {
+    let data = {
+      user_id: user.id,
+      product_id: item.id
+    }
+    axios.post('http://10.192.12.51:2000/api/favourites/', data).
+      then((respone) => {
+        // alert(JSON.stringify(respone));
+        if (respone.data.statusCode === 200) {
+          alert(respone.data.message);
+          getListFavourites()
+        } else {
+        }
+      }
+      )
+      .catch((err) =>
+        console.log(err)
+      )
+  }
+
+  const addToCartBtn = (item: { id: any; sale_price: any; price: any; }) => {
     // Update cart item quantity if already in cart
-    // item.sale_price ? item.sale_price : item.price
-    // if(carts.some((cartItem) => cartItem.sale_price != 0)){
-    //   cartItem.Price = cartItem.sale_price
-    // };
-    // console.log(item)
-    if (carts.some((cartItem) => cartItem.id === item.id)) {
-      setCart((cart) =>
-        cart.map((cartItem) =>
+    if (carts.some((cartItem: { id: any; }) => cartItem.id === item.id)) {
+      setCart((cart: any[]) =>
+        cart.map((cartItem: { id: any; amount: number; sale_price: any; price: any; }) =>
 
 
           cartItem.id === item.id
@@ -63,9 +86,9 @@ const HomeScreen = ({ navigation }) => {
     }
 
     // Add to cart
-    setCart((cart) => [
+    setCart((cart: any) => [
       ...cart,
-      { ...item, amount: 1,price: item.sale_price ? item.sale_price : item.price }, // <-- initial amount 1
+      { ...item, amount: 1, price: item.sale_price ? item.sale_price : item.price }, // <-- initial amount 1
 
 
     ]);
@@ -118,10 +141,9 @@ const HomeScreen = ({ navigation }) => {
   }
 
   useEffect(() => {
-    // format(100000);
-    getFoods(7, null);
+    getFoods(7, key);
     getCategories();
-    // console.log(carts);
+    getListFavourites();
   }, [])
   const ListCategories = () => {
     return (
@@ -227,6 +249,28 @@ const HomeScreen = ({ navigation }) => {
               {<Icon name="add-outline" size={20} color={COLORS.white} />}
             </View>
           </TouchableHighlight>
+          {food.isFavourite != 0 ?
+
+            <TouchableHighlight
+              underlayColor={COLORS.white}
+              activeOpacity={0.9}
+              onPress={() => addToFav(food)}>
+              <View style={style.addToCartBtn}>
+                {<Icon name="heart" size={20} color={COLORS.red} />}
+              </View>
+            </TouchableHighlight>
+            :
+            <TouchableHighlight
+              underlayColor={COLORS.white}
+              activeOpacity={0.9}
+              onPress={() => addToFav(food)}>
+              <View style={style.addToCartBtn}>
+                {<Icon name="heart" size={20} color={COLORS.white} />}
+              </View>
+            </TouchableHighlight>
+
+          }
+
         </View>
       </View >
 
