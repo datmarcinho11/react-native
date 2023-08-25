@@ -9,7 +9,7 @@ import { useUser } from '../context/UserProvider';
 import { useCart } from '../context/CartProvider';
 import axios from 'axios';
 
-const CartScreen = ({ navigation }) => {
+const CheckOutScreen = ({ navigation }) => {
 
   const [note, setNote] = useState('');
 
@@ -46,7 +46,7 @@ const CartScreen = ({ navigation }) => {
       shipDate: null
     }
     if (carts.length > 0) {
-      axios.post('http://192.168.0.114:2000/api/orders/', formOrders).
+      axios.post('http://10.192.12.51:2000/api/orders/', formOrders).
         then((respone) => {
           if (respone.data.statusCode === 200) {
 
@@ -61,7 +61,7 @@ const CartScreen = ({ navigation }) => {
                     quantity: c.amount,
                     order_id: respone.data.iD
                   },
-                  axios.post('http://192.168.0.114:2000/api/order_detail/', orderDetails).
+                  axios.post('http://10.192.12.51:2000/api/order_detail/', orderDetails).
                     then((respone) => {
                       // console.log(orderDetails);
                       // if (respone.data.statusCode === 200) {
@@ -118,8 +118,7 @@ const CartScreen = ({ navigation }) => {
           <Text style={{ fontSize: 17, fontWeight: 'bold' }}> {item.pricee = item.price.toLocaleString('vi', { style: 'currency', currency: 'VND' })} </Text>
         </View>
         <View style={{ marginRight: 20, alignItems: 'center' }}>
-          <Text style={{ fontWeight: 'bold', fontSize: 18 }}>{item.amount}</Text>
-          <View style={style.actionBtn}>
+          {/* <View style={style.actionBtn}>
             <TouchableOpacity
               activeOpacity={0.8}
               onPress={() => handleChange(item.id, -1)}>
@@ -130,14 +129,16 @@ const CartScreen = ({ navigation }) => {
               onPress={() => handleChange(item.id, 1)}>
               {<Icon name="add-outline" size={25} color={COLORS.white} />}
             </TouchableOpacity>
-          </View>
+          </View> */}
 
         </View>
-        <TouchableOpacity
+        <Text style={{ fontWeight: 'bold', fontSize: 18 }}>X {item.amount}</Text>
+
+        {/* <TouchableOpacity
           activeOpacity={0.8}
           onPress={() => handleRemove(item.id)}>
           {<Icon name="trash" size={28} />}
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
     );
   };
@@ -145,7 +146,7 @@ const CartScreen = ({ navigation }) => {
     <SafeAreaView style={{ backgroundColor: COLORS.white, flex: 1 }}>
       <View style={style.header}>
         {<Icon name="arrow-back-outline" size={28} onPress={navigation.goBack} />}
-        <Text style={{ fontSize: 20, fontWeight: 'bold', marginLeft: 20 }}>Cart</Text>
+        <Text style={{ fontSize: 20, fontWeight: 'bold', marginLeft: 20 }}>Check Out</Text>
       </View>
       {user.name != undefined ?
         carts.length > 0 ?
@@ -158,30 +159,39 @@ const CartScreen = ({ navigation }) => {
             ListFooterComponent={() => (
               // carts.map((item: any, index) => (
 
-
-
               <View>
 
+                <View>
+                  <Text style={{ fontSize: 18, fontWeight: 'bold' }}>Information : </Text>
+                  <View style={{ marginHorizontal: 20, marginTop: 5}}>
 
-                <View style={{ marginHorizontal: 30 }}>
-                  <PrimaryButton title="REMOVE CART" onPress={() => removeCart()} />
+                    <Text style={{ fontSize: 18, }}>Orderer : {user.name}</Text>
+                    <Text style={{ fontSize: 18, }}>Address : {user.address}</Text>
+                  </View>
                 </View>
 
-                <View style={{ marginTop: 70 }}>
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      marginVertical: 15,
-                      justifyContent:'center'
-                    }}>
-                    
-                    <Text style={{ fontSize: 18, fontWeight: 'bold' }}>Total Price : {price = price.toLocaleString('vi', { style: 'currency', currency: 'VND' })}
-                    </Text>
-                  </View>
+                <Text style={{ fontSize: 18, fontWeight: 'bold' }}>Note : </Text>
+                <View style={{ borderWidth: 1, marginHorizontal: 20, marginTop: 15, borderRadius: 10 }}>
+                  <TextInput
+                    // multiline={true}
+                    // numberOfLines={10}
+                    style={{ height: 100, textAlignVertical: 'top', marginLeft: 15 }} onChangeText={(value) => setNote(value)} />
+                </View>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    marginVertical: 15,
+                  }}>
+                  <Text style={{ fontSize: 18, fontWeight: 'bold' }}>
+                    Total Price
+                  </Text>
+                  <Text style={{ fontSize: 18, fontWeight: 'bold' }}>{price = price.toLocaleString('vi', { style: 'currency', currency: 'VND' })}
+                  </Text>
+                </View>
 
-                  <View style={{ marginHorizontal: 30}}>
-                    <PrimaryButton title="CHECKOUT" onPress={() => navigation.navigate('CheckOut')} />
-                  </View>
+                <View style={{ marginHorizontal: 30 }}>
+                  <PrimaryButton title="ORDER" onPress={() => checkOut()} />
                 </View>
               </View>
               // ))
@@ -247,4 +257,4 @@ const style = StyleSheet.create({
   },
 });
 
-export default CartScreen;
+export default CheckOutScreen;

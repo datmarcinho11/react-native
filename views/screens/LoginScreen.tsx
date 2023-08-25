@@ -27,12 +27,12 @@ const LoginScreen = ({ navigation }) => {
         formData.password === '' ? checkPassword('Password cannot be blank') : checkPassword('')
         formData.email === '' ? checkEmail('Email cannot be blank') : checkEmail('')
         if (formData.email !== '' && formData.password !== '' && regexEmail.test(formData.email)) {
-            axios.post('http://172.16.1.9:2000/api/check_login/', formData).
+            axios.post('http://10.192.12.51:2000/api/check_login/', formData).
                 then((respone) => {
                     if (respone.data.statusCode === 200) {
                         setUser(respone.data.data)
                         AsyncStorage.setItem('users',JSON.stringify(respone.data.data))
-                         navigation.navigate('Home');
+                         navigation.navigate('home');
                     } else {
                         alert(respone.data.message);
                     }

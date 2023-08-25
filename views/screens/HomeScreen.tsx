@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
+  Alert,
   Dimensions,
   Image,
   SafeAreaView,
@@ -28,30 +29,48 @@ const cardWidth = width / 2 - 20;
 
 const HomeScreen = ({ navigation }) => {
 
-
+  const format = (x: any) => {
+    x = x.toLocaleString('vi', { style: 'currency', currency: 'VND' });
+    console.log(x)
+  }
   const addToCartBtn = (item) => {
     // Update cart item quantity if already in cart
+    // item.sale_price ? item.sale_price : item.price
+    // if(carts.some((cartItem) => cartItem.sale_price != 0)){
+    //   cartItem.Price = cartItem.sale_price
+    // };
     // console.log(item)
     if (carts.some((cartItem) => cartItem.id === item.id)) {
       setCart((cart) =>
         cart.map((cartItem) =>
-          // console.log(cartItem),
+
+
           cartItem.id === item.id
             ? {
               ...cartItem,
               amount: cartItem.amount + 1,
+              price: cartItem.sale_price ? cartItem.sale_price : cartItem.price
             }
-            : cartItem
+            : {
+              ...cartItem,
+              price: cartItem.sale_price ? cartItem.sale_price : cartItem.price
+            },
+          console.log(cart)
         )
       );
+      Alert.alert('Add to cart successfully')
       return;
     }
 
     // Add to cart
     setCart((cart) => [
       ...cart,
-      { ...item, amount: 1 } // <-- initial amount 1
+      { ...item, amount: 1,price: item.sale_price ? item.sale_price : item.price }, // <-- initial amount 1
+
+
     ]);
+    Alert.alert('Add to cart successfully')
+
   };
 
   const { user, setUser, getUser }: any = useUser();
@@ -71,14 +90,14 @@ const HomeScreen = ({ navigation }) => {
       let res: any;
       if (id != 7) {
 
-        res = await fetch('http://192.168.0.114:2000/api/product-by-cat-id/' + id)
+        res = await fetch('http://10.192.12.51:2000/api/product-by-cat-id/' + id)
       }
       else if (key != null) {
-        res = await fetch('http://192.168.0.114:2000/api/product/?key=' + key)
+        res = await fetch('http://10.192.12.51:2000/api/product/?key=' + key)
 
       }
       else {
-        res = await fetch('http://192.168.0.114:2000/api/product')
+        res = await fetch('http://10.192.12.51:2000/api/product')
 
       }
       const data = await res.json();
@@ -90,7 +109,7 @@ const HomeScreen = ({ navigation }) => {
   const [categories, setCategories] = useState([]);
   const getCategories = async () => {
     try {
-      const res = await fetch('http://192.168.0.114:2000/api/category')
+      const res = await fetch('http://10.192.12.51:2000/api/category')
       const data = await res.json();
       setCategories(data.data)
     } catch (error) {
@@ -99,7 +118,7 @@ const HomeScreen = ({ navigation }) => {
   }
 
   useEffect(() => {
-
+    // format(100000);
     getFoods(7, null);
     getCategories();
     // console.log(carts);
@@ -183,9 +202,23 @@ const HomeScreen = ({ navigation }) => {
             flexDirection: 'row',
             justifyContent: 'space-between',
           }}>
-          <Text style={{ fontSize: 18, fontWeight: 'bold' }}>
-            {food.price} VND
-          </Text>
+          {food.sale_price != 0 ?
+            <View >
+              <Text style={{ fontSize: 18, fontWeight: 'bold', textDecorationLine: 'line-through', color: 'red' }}>
+                {food.pricee = food.price.toLocaleString('vi', { style: 'currency', currency: 'VND' })}
+
+              </Text>
+              <Text style={{ fontSize: 18, fontWeight: 'bold' }}>
+                {food.pricee = food.sale_price.toLocaleString('vi', { style: 'currency', currency: 'VND' })}
+
+              </Text>
+            </View>
+            :
+            <Text style={{ fontSize: 18, fontWeight: 'bold' }}>
+              {food.pricee = food.price.toLocaleString('vi', { style: 'currency', currency: 'VND' })}
+
+            </Text>
+          }
           <TouchableHighlight
             underlayColor={COLORS.white}
             activeOpacity={0.9}

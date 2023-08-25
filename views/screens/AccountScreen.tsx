@@ -5,6 +5,7 @@ import COLORS from '../../consts/colors';
 import { PrimaryButton } from '../components/Button';
 import { useUser } from '../context/UserProvider';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 const AccountScreen = ({ navigation }) => {
     const { user, setUser, getUser, delUser }: any = useUser();
@@ -16,34 +17,51 @@ const AccountScreen = ({ navigation }) => {
         <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white }}>
 
             <View >
-                <View>
 
-                    <Text style={{ fontSize: 32, fontWeight: 'bold', }}>
-                        account
-                    </Text>
 
+                <View style={style.header}>
+                    {<Icon name="arrow-back-outline" size={28} onPress={navigation.goBack} />}
+                    <Text style={{ fontSize: 20, fontWeight: 'bold', marginLeft: 20 }}>Account</Text>
                 </View>
+                {user.name == undefined ?
 
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-around', marginTop: 30 }}>
+                        <TouchableOpacity style={{ padding: 15, backgroundColor: COLORS.primary, borderRadius: 15 }} onPress={() => navigation.navigate('Login')}><Text>Sign in</Text></TouchableOpacity>
+                        <TouchableOpacity style={{ padding: 15, backgroundColor: COLORS.primary, borderRadius: 15 }} onPress={() => navigation.navigate('Register')}><Text>Sign up</Text></TouchableOpacity>
+                    </View>
+                    :
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-around', marginTop: 30 }}>
 
-                <PrimaryButton
-                    onPress={() => navigation.navigate('Register')}
-                    title="Sign Up"
-                />
-                <PrimaryButton
-                    onPress={() => navigation.navigate('Login')}
-                    title="Sign in"
-                />
-                <PrimaryButton
-                    onPress={() => logOut()}
-                    title="Log out"
+                        <TouchableOpacity style={{ padding: 15, backgroundColor: COLORS.primary, borderRadius: 15 }} ><Text style={{ fontWeight: 'bold', textTransform: 'uppercase' }}> {user.name}</Text></TouchableOpacity>
+                        <TouchableOpacity style={{ padding: 15, backgroundColor: COLORS.primary, borderRadius: 15 }} onPress={() => logOut()}><Text>Log out</Text></TouchableOpacity>
+                    </View>
+                }
+            </View>
+            <View style={{ paddingHorizontal: 20, marginTop: 20 }}>
+                <View style={{marginBottom: 20 }}>
 
-                />
+                    <TouchableOpacity style={{ padding: 15, backgroundColor: COLORS.grey, borderRadius: 15 }} onPress={() => alert(111)}><Text style={{color:COLORS.white}}>List order</Text></TouchableOpacity>
+                </View>
+                <View style={{marginBottom: 20 }}>
+
+                    <TouchableOpacity style={{ padding: 15, backgroundColor: COLORS.grey, borderRadius: 15 }} onPress={() => alert(111)}><Text style={{color:COLORS.white}}>Delivery</Text></TouchableOpacity>
+                </View>
+                
+                
+
             </View>
         </SafeAreaView>
     );
 };
 
 const style = StyleSheet.create({
+    header: {
+        marginTop: 20,
+        flexDirection: 'row',
+        // justifyContent: 'center',
+        alignItems: 'center',
+        paddingHorizontal: 20,
+    },
     textContainer: {
         flex: 1,
         paddingHorizontal: 15,

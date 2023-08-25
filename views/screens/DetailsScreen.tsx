@@ -1,13 +1,43 @@
 import React from 'react';
-import {SafeAreaView, StyleSheet, View, Text, Image,ScrollView} from 'react-native';
+import {SafeAreaView, StyleSheet, View, Text, Image,ScrollView, Alert} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import COLORS from '../../consts/colors';
 import {SecondaryButton} from '../components/Button';
 import { useUser } from '../context/UserProvider';
+import { useCart } from '../context/CartProvider';
 
 const DetailsScreen = ({navigation, route}) => {
   // const {user,setUser,getUser }:any = useUser();
+  const { carts, setCart, getCart }: any = useCart();
 
+  const addToCartBtn = (item) => {
+    // Update cart item quantity if already in cart
+    // console.log(item)
+    if (carts.some((cartItem) => cartItem.id === item.id)) {
+      setCart((cart) =>
+        cart.map((cartItem) =>
+          // console.log(cartItem),
+          cartItem.id === item.id
+            ? {
+              ...cartItem,
+              amount: cartItem.amount + 1,
+            }
+            : cartItem
+        )
+      );
+      Alert.alert('Add to cart successfully')
+
+      return;
+    }
+
+    // Add to cart
+    setCart((cart) => [
+      ...cart,
+      { ...item, amount: 1 } // <-- initial amount 1
+    ]);
+    Alert.alert('Add to cart successfully')
+
+  };
   const item = route.params;
 
   return (
@@ -50,7 +80,7 @@ const DetailsScreen = ({navigation, route}) => {
             {item.description}
           </Text>
           <View style={{marginTop: 40, marginBottom: 40}}>
-            <SecondaryButton title="Add To Cart" />
+            <SecondaryButton title="Add To Cart" onPress={() => addToCartBtn(item)} />
           </View>
         </View>
       </ScrollView>

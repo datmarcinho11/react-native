@@ -37,7 +37,7 @@ const RegisterSceen = ({ navigation }) => {
         formData.address === '' ? checkAddress('Address cannot be blank') : checkAddress('')
         formData.email === '' ? checkEmail('Email cannot be blank') : checkEmail('')
         if (formData.name !== '' && formData.address !== '' && formData.email !== '' && formData.password !== '' && regexEmail.test(formData.email)) {
-            axios.post('http://172.16.1.9:2000/api/register', formData).
+            axios.post('http://10.192.12.51:2000/api/register', formData).
                 then((respone) => {
                     if (respone.data.statusCode === 200) {
                         navigation.navigate('Login')
