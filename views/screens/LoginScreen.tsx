@@ -32,7 +32,7 @@ const LoginScreen = ({ navigation }) => {
                     if (respone.data.statusCode === 200) {
                         setUser(respone.data.data)
                         AsyncStorage.setItem('users',JSON.stringify(respone.data.data))
-                         navigation.navigate('home');
+                        navigation.navigate('home');
                     } else {
                         alert(respone.data.message);
                     }

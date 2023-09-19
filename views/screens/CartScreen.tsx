@@ -46,7 +46,7 @@ const CartScreen = ({ navigation }) => {
       shipDate: null
     }
     if (carts.length > 0) {
-      axios.post('http://192.168.0.114:2000/api/orders/', formOrders).
+      axios.post('http://10.192.12.51:2000/api/orders/', formOrders).
         then((respone) => {
           if (respone.data.statusCode === 200) {
 
@@ -61,7 +61,7 @@ const CartScreen = ({ navigation }) => {
                     quantity: c.amount,
                     order_id: respone.data.iD
                   },
-                  axios.post('http://192.168.0.114:2000/api/order_detail/', orderDetails).
+                  axios.post('http://10.192.12.51:2000/api/order_detail/', orderDetails).
                     then((respone) => {
                       // console.log(orderDetails);
                       // if (respone.data.statusCode === 200) {

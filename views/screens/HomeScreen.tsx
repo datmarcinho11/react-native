@@ -29,18 +29,49 @@ const { width } = Dimensions.get('screen');
 const cardWidth = width / 2 - 20;
 
 const HomeScreen = ({ navigation }) => {
-  const [favourites, setFavourites] = useState([]);
+  const [favourites, setFavourites] = useState<any[]>([]);
+
 
   const getListFavourites = async () => {
     try {
-      const res = await fetch('http://10.192.12.51:2000/api/favourites/' + user.id)
+      const res = await fetch('http://10.192.12.51:2000/api/favourites/' + user.id) 
       const data = await res.json();
+      console.log(data.product);
       setFavourites(data.product)
-      console.log(data.product)
     } catch (error) {
       console.log(error)
     }
   }
+  const checkListFav = (proId) => {
+    let check: any;
+    if (favourites !== null) {
+      (favourites.some((fav: any) => {
+        if (fav.product_id == proId) {
+          check = true;
+        } else {
+          check = false;
+        }
+      }))
+    }
+    return check;
+  }
+  const checkItemExists = (proId: number) => {
+    if (favourites != null && user.name != undefined) {
+      for (let i = 0; i < favourites.length; i++) {
+
+        if (favourites[i].product_id == proId) {
+          // console.log(favourites[i].product_id + favourites[i].name)
+          console.log(i);
+          // getListFavourites()
+          return i;
+        }
+      }
+      return -1;
+    }
+  }
+
+
+
   const addToFav = (item: { id: any }) => {
     let data = {
       user_id: user.id,
@@ -51,7 +82,8 @@ const HomeScreen = ({ navigation }) => {
         // alert(JSON.stringify(respone));
         if (respone.data.statusCode === 200) {
           alert(respone.data.message);
-          getListFavourites()
+          getListFavourites();
+
         } else {
         }
       }
@@ -144,6 +176,7 @@ const HomeScreen = ({ navigation }) => {
     getFoods(7, key);
     getCategories();
     getListFavourites();
+
   }, [])
   const ListCategories = () => {
     return (
@@ -249,7 +282,7 @@ const HomeScreen = ({ navigation }) => {
               {<Icon name="add-outline" size={20} color={COLORS.white} />}
             </View>
           </TouchableHighlight>
-          {food.isFavourite != 0 ?
+          {checkItemExists(food.id) != -1 && checkItemExists(food.id) != null ?
 
             <TouchableHighlight
               underlayColor={COLORS.white}
@@ -268,6 +301,7 @@ const HomeScreen = ({ navigation }) => {
                 {<Icon name="heart" size={20} color={COLORS.white} />}
               </View>
             </TouchableHighlight>
+
 
           }
 

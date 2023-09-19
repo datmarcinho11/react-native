@@ -4,12 +4,19 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import COLORS from '../../consts/colors';
 import { View } from 'react-native';
 import HomeScreen from '../screens/HomeScreen';
+import RestaurantScreen from '../screens/RestaurantScreen';
 import CartScreen from '../screens/CartScreen';
 import AccountScreen from '../screens/AccountScreen';
+import { useCart } from '../context/CartProvider';
 
 const Tab = createBottomTabNavigator();
 
 const BottomNavigator = () => {
+  const { carts, setCart, getCart, delCart }: any = useCart();
+  
+ 
+
+  let total = carts.reduce((total, item) => total + item.amount, 0);
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -22,6 +29,7 @@ const BottomNavigator = () => {
               : 'home-outline';
           } else if (route.name === 'Cart') {
             iconName = focused ? 'cart' : 'cart-outline';
+            
           } else if (route.name === 'Account') {
             iconName = focused ? 'person' : 'person-outline';
           } else if (route.name === 'Restaurant') {
@@ -37,8 +45,8 @@ const BottomNavigator = () => {
       })}
     >
       <Tab.Screen name="home" component={HomeScreen} />
-      <Tab.Screen name="Restaurant" component={HomeScreen} />
-      <Tab.Screen name="Cart" component={CartScreen} />
+      <Tab.Screen name="Restaurant" component={RestaurantScreen} />
+      <Tab.Screen name="Cart"  component={CartScreen}  />
       <Tab.Screen name="Account" component={AccountScreen} />
     </Tab.Navigator>
   );
