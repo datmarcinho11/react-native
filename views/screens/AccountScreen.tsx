@@ -6,12 +6,15 @@ import { PrimaryButton } from '../components/Button';
 import { useUser } from '../context/UserProvider';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { useFav } from '../context/FavouritesProvider';
 
 const AccountScreen = ({ navigation }) => {
     const { user, setUser, getUser, delUser }: any = useUser();
+    const {  delFav }: any = useFav();
 
     const logOut = async () => {
         delUser();
+        delFav();
     }
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white }}>

@@ -6,7 +6,7 @@ const UserProvider = ({ children }: any) => {
     const [user, setUser] = useState('');
     const getUser = async () => {
         const result = await AsyncStorage.getItem('users');
-        if (result !== null) {
+        if (result != null) {
             setUser(JSON.parse(result))
         }
     }

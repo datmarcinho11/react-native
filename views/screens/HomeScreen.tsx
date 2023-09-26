@@ -25,44 +25,37 @@ import { PrimaryButton } from '../components/Button';
 import { useCart } from '../context/CartProvider';
 import { check } from 'prettier';
 import axios from 'axios';
+import { useFav } from '../context/FavouritesProvider';
 const { width } = Dimensions.get('screen');
 const cardWidth = width / 2 - 20;
 
-const HomeScreen = ({ navigation }) => {
+const HomeScreen = ({ navigation }: any) => {
   const [favourites, setFavourites] = useState<any[]>([]);
-
-
+  const { user, setUser, getUser }: any = useUser();
+  const { carts, setCart, getCart }: any = useCart();
+  const { favs, setFav, getFav }: any = useFav();
+  const [count, setCount ] = useState(0);
   const getListFavourites = async () => {
     try {
-      const res = await fetch('http://10.192.12.51:2000/api/favourites/' + user.id) 
-      const data = await res.json();
-      console.log(data.product);
-      setFavourites(data.product)
+      if (user.id != undefined) {
+        // console.log(user.id);
+
+        const res = await fetch('http://192.168.0.114:2000/api/favourites/' + user.id)
+        const data = await res.json();
+        setFav(data.product);
+        AsyncStorage.setItem('Favs', JSON.stringify(data.product))
+      }
     } catch (error) {
       console.log(error)
     }
   }
-  const checkListFav = (proId) => {
-    let check: any;
-    if (favourites !== null) {
-      (favourites.some((fav: any) => {
-        if (fav.product_id == proId) {
-          check = true;
-        } else {
-          check = false;
-        }
-      }))
-    }
-    return check;
-  }
   const checkItemExists = (proId: number) => {
-    if (favourites != null && user.name != undefined) {
-      for (let i = 0; i < favourites.length; i++) {
+    if (favs != null && user.name != undefined) {
+      for (let i = 0; i < favs.length; i++) {
 
-        if (favourites[i].product_id == proId) {
+        if (favs[i].product_id == proId) {
           // console.log(favourites[i].product_id + favourites[i].name)
-          console.log(i);
-          // getListFavourites()
+          //  getListFavourites()
           return i;
         }
       }
@@ -77,7 +70,7 @@ const HomeScreen = ({ navigation }) => {
       user_id: user.id,
       product_id: item.id
     }
-    axios.post('http://10.192.12.51:2000/api/favourites/', data).
+    axios.post('http://192.168.0.114:2000/api/favourites/', data).
       then((respone) => {
         // alert(JSON.stringify(respone));
         if (respone.data.statusCode === 200) {
@@ -128,8 +121,7 @@ const HomeScreen = ({ navigation }) => {
 
   };
 
-  const { user, setUser, getUser }: any = useUser();
-  const { carts, setCart, getCart }: any = useCart();
+
 
 
   const [key, setKey] = useState('');
@@ -145,14 +137,14 @@ const HomeScreen = ({ navigation }) => {
       let res: any;
       if (id != 7) {
 
-        res = await fetch('http://10.192.12.51:2000/api/product-by-cat-id/' + id)
+        res = await fetch('http://192.168.0.114:2000/api/product-by-cat-id/' + id)
       }
       else if (key != null) {
-        res = await fetch('http://10.192.12.51:2000/api/product/?key=' + key)
+        res = await fetch('http://192.168.0.114:2000/api/product/?key=' + key)
 
       }
       else {
-        res = await fetch('http://10.192.12.51:2000/api/product')
+        res = await fetch('http://192.168.0.114:2000/api/product')
 
       }
       const data = await res.json();
@@ -164,7 +156,7 @@ const HomeScreen = ({ navigation }) => {
   const [categories, setCategories] = useState([]);
   const getCategories = async () => {
     try {
-      const res = await fetch('http://10.192.12.51:2000/api/category')
+      const res = await fetch('http://192.168.0.114:2000/api/category')
       const data = await res.json();
       setCategories(data.data)
     } catch (error) {
@@ -175,7 +167,7 @@ const HomeScreen = ({ navigation }) => {
   useEffect(() => {
     getFoods(7, key);
     getCategories();
-    getListFavourites();
+    getFav();
 
   }, [])
   const ListCategories = () => {
@@ -274,14 +266,24 @@ const HomeScreen = ({ navigation }) => {
 
             </Text>
           }
-          <TouchableHighlight
-            underlayColor={COLORS.white}
-            activeOpacity={0.9}
-            onPress={() => addToCartBtn(food)}>
-            <View style={style.addToCartBtn}>
-              {<Icon name="add-outline" size={20} color={COLORS.white} />}
-            </View>
-          </TouchableHighlight>
+          {user.name != undefined ?
+            <TouchableHighlight
+              underlayColor={COLORS.white}
+              activeOpacity={0.9}
+              onPress={() => addToCartBtn(food)}>
+              <View style={style.addToCartBtn}>
+                {<Icon name="add-outline" size={20} color={COLORS.white} />}
+              </View>
+            </TouchableHighlight>
+            : <TouchableHighlight
+              underlayColor={COLORS.white}
+              activeOpacity={0.9}
+              onPress={() => navigation.navigate('Login')}>
+              <View style={style.addToCartBtn}>
+                {<Icon name="add-outline" size={20} color={COLORS.white} />}
+              </View>
+            </TouchableHighlight>
+          }
           {checkItemExists(food.id) != -1 && checkItemExists(food.id) != null ?
 
             <TouchableHighlight
@@ -339,9 +341,20 @@ const HomeScreen = ({ navigation }) => {
         }
 
         {/* <Image
-          source={require('../../assets/person.png')}
-          style={{ height: 50, width: 50, borderRadius: 25 }}
+          source={require('../../assets/close.png')}
+          style={{ height: 30, width: 30, borderRadius: 25,backgroundColor:'gray' }}
         /> */}
+        <TouchableHighlight
+          underlayColor={COLORS.white}
+          activeOpacity={0.9}
+          onPress={() => alert(1)}>
+          <View style={style.bagBtn} >
+            {<Icon name="cube-outline" size={28} color={COLORS.white} />}
+          </View>
+        </TouchableHighlight>
+        <View style={{ width: 30, height: 30, backgroundColor: 'red', borderRadius: 15, justifyContent: 'center', alignItems: 'center', position: 'absolute', top: -10, right: 8 }}>
+          <Text style={{ color: '#fff' }}>{count}</Text>
+        </View>
       </View>
       <View
         style={{
@@ -403,6 +416,16 @@ const style = StyleSheet.create({
     borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  bagBtn: {
+    width: 50,
+    height: 50,
+    marginLeft: 10,
+    backgroundColor: COLORS.primary,
+    borderRadius: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'relative'
   },
   categoriesListContainer: {
     paddingVertical: 30,

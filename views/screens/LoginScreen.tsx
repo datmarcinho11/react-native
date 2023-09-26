@@ -6,13 +6,20 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useUser } from "../context/UserProvider";
 import axios from "axios";
+import { useFav } from "../context/FavouritesProvider";
+import { ScrollView } from "react-native";
+import { useCart } from "../context/CartProvider";
 const LoginScreen = ({ navigation }) => {
-    const {user,setUser,getUser }:any = useUser();
+    const { user, setUser, getUser }: any = useUser();
+    const { favs, setFav, getFav }: any = useFav();
+    const { carts, setCart, getCart }: any = useCart();
     const [email, setEmail] = useState('');
     const [password, setPassWord] = useState('');
     const [errPassword, checkPassword] = useState('');
     const [errEmail, checkEmail] = useState('');
     const [errEmailRegex, setRegexEmail] = useState(true);
+
+
     const login = async () => {
         let formData = {
             email: email,
@@ -27,11 +34,19 @@ const LoginScreen = ({ navigation }) => {
         formData.password === '' ? checkPassword('Password cannot be blank') : checkPassword('')
         formData.email === '' ? checkEmail('Email cannot be blank') : checkEmail('')
         if (formData.email !== '' && formData.password !== '' && regexEmail.test(formData.email)) {
-            axios.post('http://10.192.12.51:2000/api/check_login/', formData).
-                then((respone) => {
+            axios.post('http://192.168.0.114:2000/api/check_login/', formData).
+                then(async (respone) => {
                     if (respone.data.statusCode === 200) {
+                        console.log('data Login :' + respone.data.data);
                         setUser(respone.data.data)
-                        AsyncStorage.setItem('users',JSON.stringify(respone.data.data))
+                        AsyncStorage.setItem('users', JSON.stringify(respone.data.data))
+
+                        console.log('data UserId :' + respone.data.data.id);
+                        const res = await fetch('http://192.168.0.114:2000/api/favourites/' + respone.data.data.id)
+                        const data = await res.json();
+                        console.log('data fav:' + data.product);
+                        setFav(data.product)
+                        AsyncStorage.setItem('Favs', JSON.stringify(data.product))
                         navigation.navigate('home');
                     } else {
                         alert(respone.data.message);
@@ -61,58 +76,62 @@ const LoginScreen = ({ navigation }) => {
                             Welcome back you've been missed!
                         </Text> */}
                     </View>
-                    <View style={{
-                        marginVertical: 30
-                    }}>
-                        <TextInput placeholder="Email" style={{ fontSize: 14, padding: 20, borderRadius: 10, marginVertical: 10, borderWidth: 1 }} onChangeText={(value) => setEmail(value)} />
-                        <Text style={{ color: 'red', fontStyle: 'italic' }}>{errEmail}</Text>
-                        <Text style={{ color: 'red', fontStyle: 'italic' }}>{!errEmailRegex ? 'Invalid email eg: admin@gmail.com' : ''}</Text>
-                        <TextInput placeholder="Password" style={{ fontSize: 14, padding: 20, borderRadius: 10, marginVertical: 10, borderWidth: 1 }} secureTextEntry={true} onChangeText={(value) => setPassWord(value)} />
-                        <Text style={{ color: 'red', fontStyle: 'italic' }}>{errPassword}</Text>
-                    </View>
-                    <View>
-                        <TouchableOpacity>
+                    <ScrollView>
+
+                        <View style={{
+                            marginVertical: 30
+                        }}>
+                            <TextInput placeholder="Email" style={{ fontSize: 14, padding: 20, borderRadius: 10, marginVertical: 10, borderWidth: 1 }} onChangeText={(value) => setEmail(value)} />
+                            <Text style={{ color: 'red', fontStyle: 'italic' }}>{errEmail}</Text>
+                            <Text style={{ color: 'red', fontStyle: 'italic' }}>{!errEmailRegex ? 'Invalid email eg: admin@gmail.com' : ''}</Text>
+                            <TextInput placeholder="Password" style={{ fontSize: 14, padding: 20, borderRadius: 10, marginVertical: 10, borderWidth: 1 }} secureTextEntry={true} onChangeText={(value) => setPassWord(value)} />
+                            <Text style={{ color: 'red', fontStyle: 'italic' }}>{errPassword}</Text>
+                        </View>
+                        <View>
+                            <TouchableOpacity >
+                                <Text style={{
+                                    fontSize: 14,
+                                    color: 'blue',
+                                    alignSelf: 'flex-end'
+                                }}>
+                                    Forgot your password ?
+                                </Text>
+                            </TouchableOpacity>
+
+                        </View>
+                        <TouchableOpacity style={{
+                            padding: 20,
+                            backgroundColor: '#F9813A',
+                            marginVertical: 30,
+                            borderRadius: 10,
+                            shadowColor: 'blue',
+                            shadowOffset: {
+                                width: 0,
+                                height: 10
+                            },
+                            shadowOpacity: 0.3,
+                            shadowRadius: 10
+                        }} onPress={() => login()}>
                             <Text style={{
-                                fontSize: 14,
-                                color: 'blue',
-                                alignSelf: 'flex-end'
-                            }}>
-                                Forgot your password ?
-                            </Text>
+                                textAlign: 'center',
+                                fontSize: 20,
+                                color: 'white',
+                            }}>Sign in</Text>
                         </TouchableOpacity>
+                        <TouchableOpacity style={{
+                            padding: 20,
 
-                    </View>
-                    <TouchableOpacity style={{
-                        padding: 20,
-                        backgroundColor: '#F9813A',
-                        marginVertical: 30,
-                        borderRadius: 10,
-                        shadowColor: 'blue',
-                        shadowOffset: {
-                            width: 0,
-                            height: 10
-                        },
-                        shadowOpacity: 0.3,
-                        shadowRadius: 10
-                    }} onPress={() => login()}>
-                        <Text style={{
-                            textAlign: 'center',
-                            fontSize: 20,
-                            color: 'white',
-                        }}>Sign in</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={{
-                        padding: 20,
+                        }}
+                            onPress={() => navigation.navigate('Register')}>
+                            <Text style={{
+                                textAlign: 'center',
+                                fontSize: 20,
+                                color: '#000',
+                                fontWeight: 'bold'
+                            }}>Create new account</Text>
+                        </TouchableOpacity>
+                    </ScrollView>
 
-                    }}
-                        onPress={() => navigation.navigate('Register')}>
-                        <Text style={{
-                            textAlign: 'center',
-                            fontSize: 20,
-                            color: '#000',
-                            fontWeight: 'bold'
-                        }}>Create new account</Text>
-                    </TouchableOpacity>
                 </View>
             </SafeAreaView>
         </>

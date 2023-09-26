@@ -11,7 +11,7 @@ import {
   
   const RestaurantScreen = () => {
     const [visible, setVisible] = useState(false);
-    const [data, setData] = useState([]);
+    const [data, setData] = useState<any[]>([]);
     const [search, setSearch] = useState('');
     const searchRef = useRef();
     const [oldData, setOldData] = useState([]);
@@ -64,7 +64,7 @@ import {
               style={{width: 24, height: 24, marginLeft: 15, opacity: 0.5}}
             />
             <TextInput
-            ref={searchRef}
+            // ref={searchRef}
               placeholder="search item here..."
               style={{width: '76%', height: 50}}
               value={search}
@@ -77,7 +77,7 @@ import {
               <TouchableOpacity
                 style={{marginRight: 15}}
                 onPress={() => {
-                searchRef.current.clear();
+                // searchRef.current.clear();
                   searchFilterFunction('');
                   setSearch('');
                 }}>

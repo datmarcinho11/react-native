@@ -5,6 +5,7 @@ import { SafeAreaView, View, Text, StyleSheet } from "react-native";
 import axios from 'axios';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useUser } from "../context/UserProvider";
+import { ScrollView } from "react-native";
 
 
 const RegisterSceen = ({ navigation }) => {
@@ -70,6 +71,7 @@ const RegisterSceen = ({ navigation }) => {
                             Creat an account so you can explore all the existing jobs
                         </Text> */}
                     </View>
+                    <ScrollView>
                     <View style={{
                         marginVertical: 15
                     }}>
@@ -113,6 +115,7 @@ const RegisterSceen = ({ navigation }) => {
                             color: '#000',
                         }}>Alredy have an account</Text>
                     </TouchableOpacity> */}
+                    </ScrollView>
                 </View>
             </SafeAreaView>
         </>

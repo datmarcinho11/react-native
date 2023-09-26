@@ -12,6 +12,7 @@ import LoginScreen from './views/screens/LoginScreen';
 import UserProvider from './views/context/UserProvider';
 import CartProvider from './views/context/CartProvider';
 import CheckOutScreen from './views/screens/CheckOutScreen';
+import FavouritesProvider from './views/context/FavouritesProvider';
 
 const Stack = createNativeStackNavigator();
 
@@ -21,6 +22,7 @@ const App = () => {
       <StatusBar backgroundColor={COLORS.white} barStyle="dark-content" />
       <UserProvider>
         <CartProvider>
+          <FavouritesProvider>
           <Stack.Navigator screenOptions={{ headerShown: false }}>
             <Stack.Screen name="BoardScreen" component={OnBoardScreen} />
             <Stack.Screen name="CheckOut" component={CheckOutScreen} />
@@ -29,6 +31,7 @@ const App = () => {
             <Stack.Screen name="Home" component={BottomNavigator} />
             <Stack.Screen name="DetailsScreen" component={DetailsScreen} />
           </Stack.Navigator>
+          </FavouritesProvider>
         </CartProvider>
       </UserProvider>
     </NavigationContainer>

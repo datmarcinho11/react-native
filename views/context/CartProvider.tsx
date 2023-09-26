@@ -6,7 +6,7 @@ const CartProvider = ({ children }: any) => {
     const [carts, setCart] = useState([]);
     const getCart = async () => {
         const result = await AsyncStorage.getItem('Carts');
-        if (result !== null) {
+        if (result != null) {
             setCart(JSON.parse(result))
         }
     }
