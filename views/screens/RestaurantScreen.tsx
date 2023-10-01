@@ -17,7 +17,7 @@ import {
     const [oldData, setOldData] = useState([]);
     const [selectedFilter, setSelectedFilter] = useState(0);
     useEffect(() => {
-      fetch('http://10.192.12.51:2000/api/product')
+      fetch('http://192.168.0.114:2000/api/product')
         .then(res => res.json())
         .then(response => {
           // console.log(response.product);

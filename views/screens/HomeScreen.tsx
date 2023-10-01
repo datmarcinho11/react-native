@@ -54,7 +54,7 @@ const HomeScreen = ({ navigation }: any) => {
       for (let i = 0; i < favs.length; i++) {
 
         if (favs[i].product_id == proId) {
-          // console.log(favourites[i].product_id + favourites[i].name)
+          // console.log(favourites[i].id+ favourites[i].name)
           //  getListFavourites()
           return i;
         }

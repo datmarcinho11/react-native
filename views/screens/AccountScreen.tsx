@@ -47,7 +47,7 @@ const AccountScreen = ({ navigation }) => {
                 </View>
                 <View style={{marginBottom: 20 }}>
 
-                    <TouchableOpacity style={{ padding: 15, backgroundColor: COLORS.grey, borderRadius: 15 }} onPress={() => alert(111)}><Text style={{color:COLORS.white}}>Delivery</Text></TouchableOpacity>
+                    <TouchableOpacity style={{ padding: 15, backgroundColor: COLORS.grey, borderRadius: 15 }} onPress={() => navigation.navigate('Favourites')}><Text style={{color:COLORS.white}}>List Favourites</Text></TouchableOpacity>
                 </View>
                 
                 

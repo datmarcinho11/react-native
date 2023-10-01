@@ -51,10 +51,10 @@ const CheckOutScreen = ({ navigation }) => {
           if (respone.data.statusCode === 200) {
 
             if (respone.data.iD != null) {
-              let formOrderDetails = [{}];
               let orderDetails: any;
               {
                 carts.map((c) => (
+                 
                   orderDetails = {
                     product_id: c.id,
                     price: c.price,

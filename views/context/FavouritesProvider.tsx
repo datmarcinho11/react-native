@@ -7,7 +7,7 @@ const FavouritesProvider = ({ children }: any) => {
 
     const getFav = async () => {
         const result = await AsyncStorage.getItem('Favs');
-        if (result != undefined) {
+        if (result != null) {
             setFav(JSON.parse(result))
         }
     }
